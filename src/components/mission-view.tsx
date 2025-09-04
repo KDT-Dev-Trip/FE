@@ -69,10 +69,21 @@ const diskData = [
   { time: '10:07', read: 49.8, write: 29.4 }
 ];
 
-const commonCommands = ["kubectl get pods", "kubectl get deployments", "kubectl apply -f", "ls -la", "cat"];
+// Common commands based on mission stack
+const getCommonCommands = (stack: string) => {
+  switch (stack) {
+    case 'docker':
+      return ["docker ps", "docker images", "docker run hello-world", "docker logs", "docker --help"];
+    case 'kubernetes':
+      return ["kubectl get pods", "kubectl get deployments", "kubectl apply -f", "kubectl get services", "kubectl describe"];
+    default:
+      return ["ls -la", "cat", "pwd", "help"];
+  }
+};
 
 export function MissionView({ mission, attempt }: MissionViewProps) {
   const router = useRouter();
+  const commonCommands = getCommonCommands(mission.stack || 'default');
   const { toast } = useToast();
   const [terminalInput, setTerminalInput] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -270,30 +281,35 @@ export function MissionView({ mission, attempt }: MissionViewProps) {
           </p>
           <ScrollArea className="flex-1 pr-4 -mr-4">
             <div className="space-y-3">
-              {mission.objectives.map((objective, index) => (
+              {mission.objectives?.map((objective, index) => (
                 <div key={index} className="flex items-start gap-2">
                   <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
                   <p className="text-sm text-muted-foreground">{objective}</p>
                 </div>
-              ))}
+              )) || (
+                <div className="flex items-start gap-2">
+                  <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
+                  <p className="text-sm text-muted-foreground">미션 목표를 완료하세요</p>
+                </div>
+              )}
             </div>
             
-            {mission.prerequisites.length > 0 && (
+            {mission.prerequisites?.length > 0 && (
               <div className="mt-6">
                 <p className="text-sm font-semibold mb-2">선수 조건</p>
                 <div className="space-y-1">
-                  {mission.prerequisites.map((prereq, index) => (
+                  {mission.prerequisites?.map((prereq, index) => (
                     <p key={index} className="text-sm text-muted-foreground">• {prereq}</p>
                   ))}
                 </div>
               </div>
             )}
             
-            {mission.tags.length > 0 && (
+            {mission.tags?.length > 0 && (
               <div className="mt-6">
                 <p className="text-sm font-semibold mb-2">태그</p>
                 <div className="flex flex-wrap gap-1">
-                  {mission.tags.map((tag, index) => (
+                  {mission.tags?.map((tag, index) => (
                     <span key={index} className="px-2 py-1 bg-secondary text-secondary-foreground rounded text-xs">
                       {tag}
                     </span>
@@ -319,11 +335,32 @@ export function MissionView({ mission, attempt }: MissionViewProps) {
                             <Save className="mr-2 h-4 w-4" />
                             {isSaving ? "저장 중..." : "임시 저장"}
                         </Button>
-                        <Button size="sm" onClick={handleSubmit} disabled={isSubmitting || !currentAttempt}>
+                        <Button 
+                            size="sm" 
+                            onClick={handleSubmit} 
+                            disabled={isSubmitting || !currentAttempt || !terminalSession}
+                            className="relative"
+                        >
                             {isSubmitting ? "제출 중..." : "평가를 위해 제출"}
                             <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                     </div>
+                    {/* Submit status indicator */}
+                    {!currentAttempt && (
+                        <p className="text-sm text-muted-foreground mt-2">
+                            💡 미션을 시작한 후 제출할 수 있습니다
+                        </p>
+                    )}
+                    {currentAttempt && !terminalSession && (
+                        <p className="text-sm text-muted-foreground mt-2">
+                            💡 터미널이 연결된 후 제출할 수 있습니다
+                        </p>
+                    )}
+                    {currentAttempt && terminalSession && !isSubmitting && (
+                        <p className="text-sm text-green-600 mt-2">
+                            ✅ 언제든지 제출할 수 있습니다
+                        </p>
+                    )}
                 </div>
             </CardHeader>
             <CardContent className="flex-1 flex flex-col gap-4">

@@ -22,14 +22,47 @@ interface CommandSecurityRadarProps {
 }
 
 export function CommandSecurityRadar({ commands }: CommandSecurityRadarProps) {
+  const safeCommands = commands || [];
+  
+  // Handle empty commands case
+  if (safeCommands.length === 0) {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 backdrop-blur-sm">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Shield className="w-5 h-5 text-blue-400" />
+              보안 위험도 분석
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center py-8 text-slate-400">
+              명령어 분석 데이터가 없습니다.
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 backdrop-blur-sm">
+          <CardHeader>
+            <CardTitle className="text-white">카테고리별 성능</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center py-8 text-slate-400">
+              카테고리 분석 데이터가 없습니다.
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+  
   // 보안 위험도별 통계
-  const securityStats = commands.reduce((acc, cmd) => {
+  const securityStats = safeCommands.reduce((acc, cmd) => {
     acc[cmd.security_risk_level] = (acc[cmd.security_risk_level] || 0) + 1
     return acc
   }, {} as Record<string, number>)
 
   // 카테고리별 통계
-  const categoryStats = commands.reduce((acc, cmd) => {
+  const categoryStats = safeCommands.reduce((acc, cmd) => {
     if (!acc[cmd.command_category]) {
       acc[cmd.command_category] = {
         total: 0,
@@ -100,7 +133,7 @@ export function CommandSecurityRadar({ commands }: CommandSecurityRadarProps) {
               
               {/* 각 위험도별 세그먼트 */}
               {Object.entries(securityStats).map(([risk, count], index) => {
-                const total = commands.length
+                const total = safeCommands.length
                 const percentage = (count / total) * 100
                 const angle = (percentage / 100) * 360
                 const startAngle = Object.entries(securityStats).slice(0, index).reduce((acc, [, c]) => 
@@ -132,7 +165,7 @@ export function CommandSecurityRadar({ commands }: CommandSecurityRadarProps) {
             
             {/* 중앙 텍스트 */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <div className="text-2xl font-bold text-white">{commands.length}</div>
+              <div className="text-2xl font-bold text-white">{safeCommands.length}</div>
               <div className="text-xs text-slate-400">총 명령어</div>
             </div>
           </div>
@@ -147,7 +180,7 @@ export function CommandSecurityRadar({ commands }: CommandSecurityRadarProps) {
                 </div>
                 <div className="text-lg font-bold">{count}</div>
                 <div className="text-xs opacity-75">
-                  {((count / commands.length) * 100).toFixed(1)}%
+                  {((count / safeCommands.length) * 100).toFixed(1)}%
                 </div>
               </div>
             ))}

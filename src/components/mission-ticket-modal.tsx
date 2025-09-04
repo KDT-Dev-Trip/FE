@@ -540,7 +540,7 @@ export function MissionTicketModal({
                   <Button 
                     variant="outline" 
                     onClick={() => setShowTicketSystem(false)}
-                    className="flex-1"
+                    className="flex-1 text-black hover:text-black"
                   >
                     취소
                   </Button>

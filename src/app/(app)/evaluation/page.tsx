@@ -48,90 +48,106 @@ const mockEvaluationData = {
     totalPoints: 1250
   },
   recentEvaluation: {
-    id: 1,
-    mission_attempt_id: "550e8400-e29b-41d4-a716-446655440001",
+    id: 2,
+    mission_attempt_id: "550e8400-e29b-41d4-a716-446655440002",
     user_id: 1001,
-    mission_id: 1,
-    mission_title: "Docker 컨테이너 기초",
-    mission_type: "DOCKER",
-    mission_difficulty: "BEGINNER" as const,
+    mission_id: 2,
+    mission_title: "Kubernetes 기초: 배포",
+    mission_type: "KUBERNETES",
+    mission_difficulty: "INTERMEDIATE" as const,
     evaluation_status: "COMPLETED" as const,
-    overall_score: 85,
-    correctness_score: 90,
-    efficiency_score: 80,
-    quality_score: 85,
-    code_quality_score: 90,
-    security_score: 80,
-    style_score: 85,
-    feedback_summary: "Docker 컨테이너 생성과 기본 설정을 잘 이해하고 있습니다. 보안 설정을 추가하면 더 좋을 것 같습니다.",
+    overall_score: 82,
+    correctness_score: 85,
+    efficiency_score: 78,
+    quality_score: 84,
+    code_quality_score: 80,
+    security_score: 79,
+    style_score: 88,
+    feedback_summary: "Kubernetes Deployment와 Service 생성을 성공적으로 완료하셨습니다! YAML 파일 작성 능력이 뛰어나며, kubectl 명령어 사용법도 잘 이해하고 계십니다. 리소스 관리와 보안 설정 부분에서 개선할 여지가 있습니다.",
     feedback_details: {
-      strengths: ["올바른 베이스 이미지 선택", "적절한 포트 노출 설정", "명령어 구문이 정확함"],
-      improvements: ["보안 강화 필요", "멀티스테이지 빌드 고려", "리소스 제한 설정 권장"],
-      next_steps: ["Docker 보안 실습", "멀티스테이지 빌드 학습"]
+      strengths: [
+        "YAML 파일 구조가 올바르게 작성됨",
+        "적절한 라벨 셀렉터 사용",
+        "Service와 Deployment 연동이 정확함",
+        "kubectl 명령어 사용이 체계적임"
+      ],
+      improvements: [
+        "리소스 limits와 requests 설정 필요",
+        "readiness/liveness probe 설정 권장",
+        "Security Context 설정 고려",
+        "ConfigMap이나 Secret 활용 검토"
+      ],
+      next_steps: [
+        "Kubernetes 리소스 관리 심화학습",
+        "Health Check 설정 실습",
+        "보안 모범사례 학습",
+        "고급 배포 전략 익히기"
+      ]
     },
-    commands_executed: 12,
-    significant_commands: 8,
-    error_commands: 1,
-    total_execution_time_ms: 45000,
-    evaluation_duration_ms: 2500,
-    stamps_earned: 1,
-    points_awarded: 100,
-    created_at: "2024-01-15T14:30:00Z",
-    updated_at: "2024-01-15T14:32:30Z"
+    commands_executed: 18,
+    significant_commands: 14,
+    error_commands: 2,
+    total_execution_time_ms: 68000,
+    evaluation_duration_ms: 3200,
+    stamps_earned: 2,
+    points_awarded: 150,
+    created_at: "2024-01-15T15:45:00Z",
+    updated_at: "2024-01-15T15:48:12Z"
   },
   commandAnalysis: [
     {
       id: 1,
-      mission_attempt_id: "550e8400-e29b-41d4-a716-446655440001",
-      ai_evaluation_id: 1,
-      command: "docker build -t myapp .",
-      command_category: "docker",
+      mission_attempt_id: "550e8400-e29b-41d4-a716-446655440002",
+      ai_evaluation_id: 2,
+      command: "kubectl apply -f deployment.yaml",
+      command_category: "kubernetes",
+      correctness_assessment: "CORRECT" as const,
+      efficiency_rating: 5,
+      best_practice_score: 9,
+      security_risk_level: "LOW" as const,
+      ai_feedback: "kubectl apply 명령어를 올바르게 사용하셨습니다. YAML 파일을 통한 선언적 배포가 모범 사례입니다.",
+      improvement_suggestions: ["--dry-run 옵션으로 사전 검증", "--validate 옵션 사용 권장"],
+      alternative_commands: ["kubectl apply -f deployment.yaml --dry-run=client", "kubectl create -f deployment.yaml"],
+      analysis_confidence: 0.95,
+      created_at: "2024-01-15T15:45:00Z"
+    },
+    {
+      id: 2,
+      mission_attempt_id: "550e8400-e29b-41d4-a716-446655440002",
+      ai_evaluation_id: 2,
+      command: "kubectl get deployments",
+      command_category: "kubernetes",
       correctness_assessment: "CORRECT" as const,
       efficiency_rating: 4,
       best_practice_score: 8,
       security_risk_level: "LOW" as const,
-      ai_feedback: "올바른 Docker 빌드 명령어입니다. 태그명이 적절합니다.",
-      improvement_suggestions: ["멀티스테이지 빌드 고려", "빌드 컨텍스트 최적화"],
-      alternative_commands: ["docker build -t myapp:v1.0 .", "docker build --no-cache -t myapp ."],
-      analysis_confidence: 0.92,
-      created_at: "2024-01-15T14:30:00Z"
-    },
-    {
-      id: 2,
-      mission_attempt_id: "550e8400-e29b-41d4-a716-446655440001", 
-      ai_evaluation_id: 1,
-      command: "docker run -d -p 8080:8080 myapp",
-      command_category: "docker",
-      correctness_assessment: "CORRECT" as const,
-      efficiency_rating: 4,
-      best_practice_score: 7,
-      security_risk_level: "MEDIUM" as const,
-      ai_feedback: "컨테이너 실행 명령어가 적절합니다. 보안 설정을 추가하면 좋겠습니다.",
-      improvement_suggestions: ["사용자 권한 제한", "리소스 제한 추가"],
-      alternative_commands: ["docker run -d -p 8080:8080 --user 1000:1000 myapp"],
+      ai_feedback: "Deployment 상태 확인을 위한 적절한 명령어입니다.",
+      improvement_suggestions: ["-o wide 옵션으로 더 자세한 정보 확인", "--watch 옵션으로 실시간 모니터링"],
+      alternative_commands: ["kubectl get deployments -o wide", "kubectl get deployments --watch"],
       analysis_confidence: 0.89,
       created_at: "2024-01-15T14:30:30Z"
     },
     {
       id: 3,
-      mission_attempt_id: "550e8400-e29b-41d4-a716-446655440001",
-      ai_evaluation_id: 1,
-      command: "docker exec -it myapp /bin/sh",
-      command_category: "docker", 
+      mission_attempt_id: "550e8400-e29b-41d4-a716-446655440002",
+      ai_evaluation_id: 2,
+      command: "kubectl expose deployment nginx-deployment --type=NodePort --port=80",
+      command_category: "kubernetes", 
       correctness_assessment: "PARTIAL" as const,
       efficiency_rating: 3,
-      best_practice_score: 6,
-      security_risk_level: "HIGH" as const,
-      ai_feedback: "디버깅 목적으로는 적절하나 프로덕션에서는 보안 위험이 있습니다.",
-      improvement_suggestions: ["프로덕션 환경에서 사용 자제", "로그 기반 디버깅 고려"],
-      alternative_commands: ["docker logs myapp", "docker inspect myapp"],
-      analysis_confidence: 0.85,
-      created_at: "2024-01-15T14:31:00Z"
+      best_practice_score: 7,
+      security_risk_level: "MEDIUM" as const,
+      ai_feedback: "Service 노출 방식이 올바르나, YAML 파일로 선언적 관리가 더 좋습니다.",
+      improvement_suggestions: ["선언적 YAML 파일 사용 권장", "보안 그룹 설정 고려"],
+      alternative_commands: ["kubectl apply -f service.yaml", "kubectl create service nodeport nginx-service --tcp=80:80"],
+      analysis_confidence: 0.87,
+      created_at: "2024-01-15T15:46:00Z"
     }
   ],
   evaluationHistory: [
-    { date: "2024-01-15", score: 85, mission: "Docker 컨테이너 기초" },
-    { date: "2024-01-10", score: 78, mission: "Kubernetes 배포" },
+    { date: "2024-01-15", score: 82, mission: "Kubernetes 기초: 배포" },
+    { date: "2024-01-12", score: 78, mission: "Docker Compose 멀티 컨테이너" },
+    { date: "2024-01-10", score: 85, mission: "Docker 컨테이너 기초" },
     { date: "2024-01-05", score: 82, mission: "CI/CD 파이프라인" },
     { date: "2023-12-28", score: 75, mission: "컨테이너 오케스트레이션" },
     { date: "2023-12-20", score: 88, mission: "모니터링 설정" },
@@ -139,10 +155,10 @@ const mockEvaluationData = {
     { date: "2023-12-10", score: 92, mission: "Jenkins 파이프라인" }
   ],
   missionTypeStats: [
-    { mission_type: "DOCKER", avg_score: 82, total_attempts: 45, success_rate: 89, avg_completion_time: 1800 },
-    { mission_type: "KUBERNETES", avg_score: 75, total_attempts: 32, success_rate: 78, avg_completion_time: 2400 },
-    { mission_type: "CI_CD", avg_score: 80, total_attempts: 28, success_rate: 85, avg_completion_time: 3200 },
-    { mission_type: "TERRAFORM", avg_score: 73, total_attempts: 21, success_rate: 71, avg_completion_time: 2800 }
+    { mission_type: "KUBERNETES", avg_score: 82, total_attempts: 38, success_rate: 84, avg_completion_time: 2800 },
+    { mission_type: "DOCKER", avg_score: 80, total_attempts: 45, success_rate: 89, avg_completion_time: 1800 },
+    { mission_type: "CI_CD", avg_score: 79, total_attempts: 28, success_rate: 85, avg_completion_time: 3200 },
+    { mission_type: "TERRAFORM", avg_score: 76, total_attempts: 21, success_rate: 76, avg_completion_time: 2800 }
   ]
 }
 
@@ -295,7 +311,7 @@ export default function EvaluationPage() {
                 </div>
                 <div>
                   <p className="text-slate-400 text-sm font-medium mb-2">총 평가</p>
-                  <p className="text-3xl font-bold text-white">{user.totalEvaluations}</p>
+                  <p className="text-3xl font-bold text-white">{user?.totalEvaluations || 0}</p>
                 </div>
               </div>
             </CardContent>
@@ -309,7 +325,7 @@ export default function EvaluationPage() {
                 </div>
                 <div>
                   <p className="text-slate-400 text-sm font-medium mb-2">완료 평가</p>
-                  <p className="text-3xl font-bold text-white">{user.completedEvaluations}</p>
+                  <p className="text-3xl font-bold text-white">{user?.completedEvaluations || 0}</p>
                 </div>
               </div>
             </CardContent>
@@ -323,7 +339,7 @@ export default function EvaluationPage() {
                 </div>
                 <div>
                   <p className="text-slate-400 text-sm font-medium mb-2">획득 스탬프</p>
-                  <p className="text-3xl font-bold text-white">{user.totalStamps}</p>
+                  <p className="text-3xl font-bold text-white">{user?.totalStamps || 0}</p>
                 </div>
               </div>
             </CardContent>
@@ -363,9 +379,9 @@ export default function EvaluationPage() {
                   최근 평가 결과
                 </CardTitle>
                 <CardDescription className="text-slate-400 text-lg">
-                  {recentEvaluation.mission_title} • {" "}
-                  <Badge className={getDifficultyColor(recentEvaluation.mission_difficulty)}>
-                    {recentEvaluation.mission_difficulty}
+                  {recentEvaluation?.mission_title || 'Unknown Mission'} • {" "}
+                  <Badge className={getDifficultyColor(recentEvaluation?.mission_difficulty || 'BEGINNER')}>
+                    {recentEvaluation?.mission_difficulty || 'BEGINNER'}
                   </Badge>
                 </CardDescription>
               </CardHeader>
@@ -373,12 +389,12 @@ export default function EvaluationPage() {
                 {/* 종합 점수 */}
                 <div className="text-center p-8 rounded-2xl bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-emerald-500/10 border border-blue-500/20">
                   <div className="text-6xl font-bold text-white mb-4">
-                    {recentEvaluation.overall_score}
+                    {recentEvaluation?.overall_score || 0}
                   </div>
                   <div className="text-blue-400 font-semibold text-xl mb-6">종합 점수</div>
                   <div className="max-w-xs mx-auto">
                     <Progress 
-                      value={recentEvaluation.overall_score} 
+                      value={recentEvaluation?.overall_score || 0} 
                       className="h-4 bg-slate-700/50" 
                     />
                   </div>
@@ -388,45 +404,45 @@ export default function EvaluationPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="text-center p-6 rounded-xl bg-gradient-to-br from-emerald-500/10 to-green-500/10 border border-emerald-500/20">
                     <div className="text-3xl font-bold text-emerald-400 mb-2">
-                      {recentEvaluation.correctness_score}
+                      {recentEvaluation?.correctness_score || 0}
                     </div>
                     <div className="text-white font-medium mb-3">정확성</div>
-                    <Progress value={recentEvaluation.correctness_score} className="h-3 bg-slate-700/50" />
+                    <Progress value={recentEvaluation?.correctness_score || 0} className="h-3 bg-slate-700/50" />
                   </div>
 
                   <div className="text-center p-6 rounded-xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20">
                     <div className="text-3xl font-bold text-blue-400 mb-2">
-                      {recentEvaluation.efficiency_score}
+                      {recentEvaluation?.efficiency_score || 0}
                     </div>
                     <div className="text-white font-medium mb-3">효율성</div>
-                    <Progress value={recentEvaluation.efficiency_score} className="h-3 bg-slate-700/50" />
+                    <Progress value={recentEvaluation?.efficiency_score || 0} className="h-3 bg-slate-700/50" />
                   </div>
 
                   <div className="text-center p-6 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20">
                     <div className="text-3xl font-bold text-purple-400 mb-2">
-                      {recentEvaluation.quality_score}
+                      {recentEvaluation?.quality_score || 0}
                     </div>
                     <div className="text-white font-medium mb-3">품질</div>
-                    <Progress value={recentEvaluation.quality_score} className="h-3 bg-slate-700/50" />
+                    <Progress value={recentEvaluation?.quality_score || 0} className="h-3 bg-slate-700/50" />
                   </div>
                 </div>
 
                 {/* 실행 통계 */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 rounded-xl bg-slate-700/30 border border-slate-600/50">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-white">{recentEvaluation.commands_executed}</div>
+                    <div className="text-2xl font-bold text-white">{recentEvaluation?.commands_executed || 0}</div>
                     <div className="text-sm text-slate-400">총 명령어</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-emerald-400">{recentEvaluation.significant_commands}</div>
+                    <div className="text-2xl font-bold text-emerald-400">{recentEvaluation?.significant_commands || 0}</div>
                     <div className="text-sm text-slate-400">중요 명령어</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-red-400">{recentEvaluation.error_commands}</div>
+                    <div className="text-2xl font-bold text-red-400">{recentEvaluation?.error_commands || 0}</div>
                     <div className="text-sm text-slate-400">오류 명령어</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-400">{(recentEvaluation.evaluation_duration_ms! / 1000).toFixed(1)}s</div>
+                    <div className="text-2xl font-bold text-blue-400">{((recentEvaluation?.evaluation_duration_ms || 0) / 1000).toFixed(1)}s</div>
                     <div className="text-sm text-slate-400">평가 시간</div>
                   </div>
                 </div>
@@ -453,7 +469,7 @@ export default function EvaluationPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {commandAnalysis.map((cmd, index) => (
+                {(commandAnalysis || []).map((cmd, index) => (
                   <div key={cmd.id} className="p-6 rounded-xl bg-slate-700/30 border border-slate-600/50 space-y-4">
                     {/* 명령어 헤더 */}
                     <div className="flex items-start justify-between">
@@ -517,7 +533,7 @@ export default function EvaluationPage() {
                       <div className="p-4 rounded-lg bg-orange-500/10 border border-orange-500/30">
                         <div className="text-sm font-medium text-orange-300 mb-2">개선 제안</div>
                         <ul className="text-slate-300 text-sm space-y-1">
-                          {cmd.improvement_suggestions.map((suggestion, idx) => (
+                          {(cmd?.improvement_suggestions || []).map((suggestion, idx) => (
                             <li key={idx} className="flex items-start gap-2">
                               <div className="w-1 h-1 bg-orange-400 rounded-full mt-2 flex-shrink-0"></div>
                               <span>{suggestion}</span>
@@ -532,7 +548,7 @@ export default function EvaluationPage() {
                       <div className="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
                         <div className="text-sm font-medium text-emerald-300 mb-2">대체 명령어</div>
                         <div className="space-y-1">
-                          {cmd.alternative_commands.map((altCmd, idx) => (
+                          {(cmd?.alternative_commands || []).map((altCmd, idx) => (
                             <div key={idx} className="font-mono text-emerald-400 text-sm bg-slate-800/50 p-2 rounded">
                               {altCmd}
                             </div>
@@ -628,7 +644,7 @@ export default function EvaluationPage() {
                     <div className="flex-1">
                       <h3 className="font-semibold text-white mb-3">AI 종합 평가</h3>
                       <p className="text-slate-300 leading-relaxed">
-                        {recentEvaluation.feedback_summary}
+                        {recentEvaluation?.feedback_summary || 'No feedback available'}
                       </p>
                     </div>
                   </div>
@@ -642,7 +658,7 @@ export default function EvaluationPage() {
                       강점
                     </h3>
                     <ul className="space-y-2 text-slate-300">
-                      {recentEvaluation.feedback_details.strengths.map((strength, index) => (
+                      {(recentEvaluation?.feedback_details?.strengths || []).map((strength, index) => (
                         <li key={index} className="flex items-start gap-2">
                           <div className="w-2 h-2 rounded-full bg-emerald-400 mt-2 flex-shrink-0"></div>
                           <span>{strength}</span>
@@ -657,7 +673,7 @@ export default function EvaluationPage() {
                       개선사항
                     </h3>
                     <ul className="space-y-2 text-slate-300">
-                      {recentEvaluation.feedback_details.improvements.map((improvement, index) => (
+                      {(recentEvaluation?.feedback_details?.improvements || []).map((improvement, index) => (
                         <li key={index} className="flex items-start gap-2">
                           <div className="w-2 h-2 rounded-full bg-yellow-400 mt-2 flex-shrink-0"></div>
                           <span>{improvement}</span>
@@ -674,7 +690,7 @@ export default function EvaluationPage() {
                     다음 단계 추천
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {recentEvaluation.feedback_details.next_steps.map((step, index) => (
+                    {(recentEvaluation?.feedback_details?.next_steps || []).map((step, index) => (
                       <Button key={index} variant="outline" className="justify-start h-auto p-4 border-slate-600 hover:bg-slate-700">
                         <div className="text-left">
                           <div className="font-medium text-white">{step}</div>
@@ -702,7 +718,7 @@ export default function EvaluationPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {evaluationHistory.map((evaluation, index) => (
+                  {(evaluationHistory || []).map((evaluation, index) => (
                     <div key={index} className="flex items-center gap-4 p-4 rounded-lg bg-slate-700/30 border border-slate-600/50">
                       <div className="flex-shrink-0">
                         <div className={`w-12 h-12 rounded-xl ${getScoreBgColor(evaluation.score)} flex items-center justify-center`}>

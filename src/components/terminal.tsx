@@ -331,20 +331,36 @@ const TerminalComponentInner = forwardRef<TerminalRef, TerminalComponentProps>(
           
           const cmd = command.toLowerCase().trim()
           
-          if (cmd.startsWith('docker')) {
+          if (cmd.startsWith('docker-compose') || cmd.startsWith('docker compose')) {
+            handleDockerComposeCommand(cmd)
+          } else if (cmd.startsWith('docker')) {
             handleDockerCommand(cmd)
           } else if (cmd.startsWith('kubectl')) {
             handleKubernetesCommand(cmd)
           } else if (cmd.startsWith('terraform')) {
             handleTerraformCommand(cmd)
           } else if (cmd === 'help') {
-            terminal.current?.writeln('\x1b[32mAvailable commands:\x1b[0m')
-            terminal.current?.writeln('  \x1b[36mdocker <subcommand>\x1b[0m    - Docker operations')
-            terminal.current?.writeln('  \x1b[36mkubectl <subcommand>\x1b[0m   - Kubernetes operations')  
-            terminal.current?.writeln('  \x1b[36mterraform <subcommand>\x1b[0m - Terraform operations')
-            terminal.current?.writeln('  \x1b[36mclear\x1b[0m                  - Clear terminal')
-            terminal.current?.writeln('  \x1b[36mls\x1b[0m                     - List files')
-            terminal.current?.writeln('  \x1b[36mpwd\x1b[0m                    - Print working directory')
+            terminal.current?.writeln('\x1b[32m🚀 DevTrip Practice Environment - Available commands:\x1b[0m')
+            terminal.current?.writeln('')
+            terminal.current?.writeln('\x1b[37m🐳 Docker Commands:\x1b[0m')
+            terminal.current?.writeln('  \x1b[36mdocker run hello-world\x1b[0m          - Test Docker installation')
+            terminal.current?.writeln('  \x1b[36mdocker ps\x1b[0m                       - List running containers')
+            terminal.current?.writeln('  \x1b[36mdocker ps -a\x1b[0m                    - List all containers')
+            terminal.current?.writeln('  \x1b[36mdocker images\x1b[0m                   - List Docker images')
+            terminal.current?.writeln('  \x1b[36mdocker run -d -p 8080:80 --name my-nginx nginx\x1b[0m - Run nginx')
+            terminal.current?.writeln('  \x1b[36mdocker logs <container>\x1b[0m         - View container logs')
+            terminal.current?.writeln('  \x1b[36mdocker stop <container>\x1b[0m         - Stop container')
+            terminal.current?.writeln('  \x1b[36mdocker --help\x1b[0m                   - Docker help')
+            terminal.current?.writeln('')
+            terminal.current?.writeln('\x1b[37m☸️  Kubernetes Commands:\x1b[0m')
+            terminal.current?.writeln('  \x1b[36mkubectl get pods\x1b[0m                - List pods')
+            terminal.current?.writeln('  \x1b[36mkubectl get deployments\x1b[0m         - List deployments')
+            terminal.current?.writeln('  \x1b[36mkubectl get services\x1b[0m            - List services')
+            terminal.current?.writeln('')
+            terminal.current?.writeln('\x1b[37m🔧 System Commands:\x1b[0m')
+            terminal.current?.writeln('  \x1b[36mclear\x1b[0m                           - Clear terminal')
+            terminal.current?.writeln('  \x1b[36mls\x1b[0m                              - List files')
+            terminal.current?.writeln('  \x1b[36mpwd\x1b[0m                             - Print working directory')
           } else if (cmd === 'clear') {
             terminal.current?.clear()
           } else if (cmd === 'ls' || cmd === 'ls -la') {
@@ -364,21 +380,136 @@ const TerminalComponentInner = forwardRef<TerminalRef, TerminalComponentProps>(
 
     const handleDockerCommand = (cmd: string) => {
       if (cmd === 'docker ps') {
-        terminal.current?.writeln('\x1b[37mCONTAINER ID   IMAGE          COMMAND       CREATED        STATUS        PORTS     NAMES\x1b[0m')
-        terminal.current?.writeln('\x1b[32ma1b2c3d4e5f6\x1b[0m   \x1b[36mnginx:latest\x1b[0m   \x1b[33m"nginx"\x1b[0m       \x1b[37m2 minutes ago\x1b[0m  \x1b[32mUp 2 minutes\x1b[0m  \x1b[35m80/tcp\x1b[0m    \x1b[37mweb-server\x1b[0m')
-        terminal.current?.writeln('\x1b[32mf6e5d4c3b2a1\x1b[0m   \x1b[36mredis:alpine\x1b[0m   \x1b[33m"redis"\x1b[0m       \x1b[37m5 minutes ago\x1b[0m  \x1b[32mUp 5 minutes\x1b[0m  \x1b[35m6379/tcp\x1b[0m  \x1b[37mcache\x1b[0m')
+        terminal.current?.writeln('\x1b[37mCONTAINER ID   IMAGE          COMMAND       CREATED        STATUS        PORTS           NAMES\x1b[0m')
+        terminal.current?.writeln('\x1b[32ma1b2c3d4e5f6\x1b[0m   \x1b[36mnginx:latest\x1b[0m   \x1b[33m"nginx"\x1b[0m       \x1b[37m2 minutes ago\x1b[0m  \x1b[32mUp 2 minutes\x1b[0m  \x1b[35m0.0.0.0:8080->80/tcp\x1b[0m   \x1b[37mmy-nginx\x1b[0m')
+        terminal.current?.writeln('\x1b[32mf6e5d4c3b2a1\x1b[0m   \x1b[36mhello-world\x1b[0m    \x1b[33m"/hello"\x1b[0m     \x1b[37m5 minutes ago\x1b[0m  \x1b[33mExited (0)\x1b[0m   \x1b[90m\x1b[0m                       \x1b[37mhello-container\x1b[0m')
+      } else if (cmd === 'docker ps -a') {
+        terminal.current?.writeln('\x1b[37mCONTAINER ID   IMAGE          COMMAND       CREATED        STATUS                   PORTS           NAMES\x1b[0m')
+        terminal.current?.writeln('\x1b[32ma1b2c3d4e5f6\x1b[0m   \x1b[36mnginx:latest\x1b[0m   \x1b[33m"nginx"\x1b[0m       \x1b[37m2 minutes ago\x1b[0m  \x1b[32mUp 2 minutes\x1b[0m         \x1b[35m0.0.0.0:8080->80/tcp\x1b[0m   \x1b[37mmy-nginx\x1b[0m')
+        terminal.current?.writeln('\x1b[32mf6e5d4c3b2a1\x1b[0m   \x1b[36mhello-world\x1b[0m    \x1b[33m"/hello"\x1b[0m     \x1b[37m5 minutes ago\x1b[0m  \x1b[33mExited (0) 5 minutes ago\x1b[0m \x1b[90m\x1b[0m                       \x1b[37mhello-container\x1b[0m')
+        terminal.current?.writeln('\x1b[32mb2c3d4e5f6a1\x1b[0m   \x1b[36mredis:alpine\x1b[0m   \x1b[33m"redis"\x1b[0m       \x1b[37m10 minutes ago\x1b[0m \x1b[33mExited (1) 8 minutes ago\x1b[0m  \x1b[90m\x1b[0m                       \x1b[37mmy-redis\x1b[0m')
       } else if (cmd === 'docker images') {
-        terminal.current?.writeln('\x1b[37mREPOSITORY    TAG       IMAGE ID       CREATED        SIZE\x1b[0m')
-        terminal.current?.writeln('\x1b[36mnginx\x1b[0m         \x1b[33mlatest\x1b[0m    \x1b[32m1b2c3d4e5f67\x1b[0m   \x1b[37m2 weeks ago\x1b[0m    \x1b[35m142MB\x1b[0m')
-        terminal.current?.writeln('\x1b[36mredis\x1b[0m         \x1b[33malpine\x1b[0m    \x1b[32mf6e5d4c3b2a1\x1b[0m   \x1b[37m1 month ago\x1b[0m    \x1b[35m32.3MB\x1b[0m')
+        terminal.current?.writeln('\x1b[37mREPOSITORY      TAG       IMAGE ID       CREATED        SIZE\x1b[0m')
+        terminal.current?.writeln('\x1b[36mnginx\x1b[0m           \x1b[33mlatest\x1b[0m    \x1b[32m1b2c3d4e5f67\x1b[0m   \x1b[37m2 weeks ago\x1b[0m    \x1b[35m142MB\x1b[0m')
+        terminal.current?.writeln('\x1b[36mhello-world\x1b[0m     \x1b[33mlatest\x1b[0m    \x1b[32mfeb5d9fea6a5\x1b[0m   \x1b[37m2 years ago\x1b[0m    \x1b[35m13.3kB\x1b[0m')
+        terminal.current?.writeln('\x1b[36mredis\x1b[0m           \x1b[33malpine\x1b[0m    \x1b[32mf6e5d4c3b2a1\x1b[0m   \x1b[37m1 month ago\x1b[0m    \x1b[35m32.3MB\x1b[0m')
+      } else if (cmd === 'docker run hello-world') {
+        terminal.current?.writeln('')
+        terminal.current?.writeln('\x1b[32mHello from Docker!\x1b[0m')
+        terminal.current?.writeln('This message shows that your installation appears to be working correctly.')
+        terminal.current?.writeln('')
+        terminal.current?.writeln('To generate this message, Docker took the following steps:')
+        terminal.current?.writeln(' 1. The Docker client contacted the Docker daemon.')
+        terminal.current?.writeln(' 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.')
+        terminal.current?.writeln(' 3. The Docker daemon created a new container from that image.')
+        terminal.current?.writeln(' 4. The Docker daemon streamed that output to the Docker client.')
+        terminal.current?.writeln('')
+      } else if (cmd.includes('docker run') && cmd.includes('nginx')) {
+        terminal.current?.writeln('\x1b[32ma1b2c3d4e5f6c7d8e9f0a1b2c3d4e5f6c7d8e9f0a1b2c3d4e5f6c7d8e9f0\x1b[0m')
+      } else if (cmd.includes('docker run')) {
+        terminal.current?.writeln('\x1b[37mUsage: docker run [OPTIONS] IMAGE [COMMAND] [ARG...]\x1b[0m')
+        terminal.current?.writeln('Example: \x1b[36mdocker run -d -p 8080:80 --name my-nginx nginx\x1b[0m')
+      } else if (cmd.startsWith('docker logs')) {
+        const containerName = cmd.split(' ')[2] || 'my-nginx'
+        terminal.current?.writeln(`\x1b[37m/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration\x1b[0m`)
+        terminal.current?.writeln(`\x1b[37m/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/\x1b[0m`)
+        terminal.current?.writeln(`\x1b[37m2024/01/15 10:30:45 [notice] 1#1: using the "epoll" event method\x1b[0m`)
+        terminal.current?.writeln(`\x1b[37m2024/01/15 10:30:45 [notice] 1#1: nginx/1.25.3\x1b[0m`)
+        terminal.current?.writeln(`\x1b[37m2024/01/15 10:30:45 [notice] 1#1: start worker processes\x1b[0m`)
+      } else if (cmd.startsWith('docker stop')) {
+        const containerName = cmd.split(' ')[2] || 'container'
+        terminal.current?.writeln(`\x1b[32m${containerName}\x1b[0m`)
+      } else if (cmd.startsWith('docker rm')) {
+        const containerName = cmd.split(' ')[2] || 'container'
+        terminal.current?.writeln(`\x1b[32m${containerName}\x1b[0m`)
       } else if (cmd.includes('docker build')) {
-        terminal.current?.writeln('\x1b[37mSending build context to Docker daemon...\x1b[0m')
+        terminal.current?.writeln('\x1b[37mSending build context to Docker daemon  2.048kB\x1b[0m')
         terminal.current?.writeln('\x1b[32mStep 1/5 : FROM node:18-alpine\x1b[0m')
+        terminal.current?.writeln('\x1b[37m ---> 49c4692e2e58\x1b[0m')
+        terminal.current?.writeln('\x1b[32mStep 2/5 : WORKDIR /app\x1b[0m')
+        terminal.current?.writeln('\x1b[37m ---> Running in 5a2b3c4d5e6f\x1b[0m')
         terminal.current?.writeln('\x1b[32mSuccessfully built a1b2c3d4e5f6\x1b[0m')
         terminal.current?.writeln('\x1b[32mSuccessfully tagged devtrip-app:latest\x1b[0m')
+      } else if (cmd === 'docker version') {
+        terminal.current?.writeln('\x1b[37mClient: Docker Engine - Community\x1b[0m')
+        terminal.current?.writeln(' Version:           24.0.7')
+        terminal.current?.writeln(' API version:       1.43')
+        terminal.current?.writeln(' Go version:        go1.20.10')
+        terminal.current?.writeln('')
+        terminal.current?.writeln('\x1b[37mServer: Docker Engine - Community\x1b[0m')
+        terminal.current?.writeln(' Version:          24.0.7')
+        terminal.current?.writeln(' API version:      1.43 (minimum version 1.12)')
+      } else if (cmd === 'docker --help') {
+        terminal.current?.writeln('\x1b[37mUsage:  docker [OPTIONS] COMMAND\x1b[0m')
+        terminal.current?.writeln('')
+        terminal.current?.writeln('\x1b[37mCommon Commands:\x1b[0m')
+        terminal.current?.writeln('  \x1b[36mrun\x1b[0m         Create and run a new container from an image')
+        terminal.current?.writeln('  \x1b[36mps\x1b[0m          List containers')
+        terminal.current?.writeln('  \x1b[36mimages\x1b[0m      List images')
+        terminal.current?.writeln('  \x1b[36mbuild\x1b[0m       Build an image from a Dockerfile')
+        terminal.current?.writeln('  \x1b[36mpull\x1b[0m        Download an image from a registry')
+        terminal.current?.writeln('  \x1b[36mlogs\x1b[0m        Fetch the logs of a container')
+        terminal.current?.writeln('  \x1b[36mstop\x1b[0m        Stop one or more running containers')
+        terminal.current?.writeln('  \x1b[36mrm\x1b[0m          Remove one or more containers')
       } else {
         terminal.current?.writeln('\x1b[37mUsage: docker [OPTIONS] COMMAND\x1b[0m')
-        terminal.current?.writeln('Try: \x1b[36mdocker ps\x1b[0m, \x1b[36mdocker images\x1b[0m, \x1b[36mdocker build\x1b[0m')
+        terminal.current?.writeln('')
+        terminal.current?.writeln('Try these common commands:')
+        terminal.current?.writeln('  \x1b[36mdocker run hello-world\x1b[0m          - Test Docker installation')
+        terminal.current?.writeln('  \x1b[36mdocker ps\x1b[0m                       - List running containers')
+        terminal.current?.writeln('  \x1b[36mdocker ps -a\x1b[0m                    - List all containers')
+        terminal.current?.writeln('  \x1b[36mdocker images\x1b[0m                   - List images')
+        terminal.current?.writeln('  \x1b[36mdocker run -d -p 8080:80 --name my-nginx nginx\x1b[0m - Run nginx')
+        terminal.current?.writeln('  \x1b[36mdocker logs my-nginx\x1b[0m            - View nginx logs')
+        terminal.current?.writeln('  \x1b[36mdocker stop my-nginx\x1b[0m            - Stop nginx')
+        terminal.current?.writeln('  \x1b[36mdocker rm my-nginx\x1b[0m              - Remove nginx container')
+      }
+    }
+
+    const handleDockerComposeCommand = (cmd: string) => {
+      if (cmd === 'docker-compose ps' || cmd === 'docker compose ps') {
+        terminal.current?.writeln('\x1b[37m    Name              Command               State           Ports\x1b[0m')
+        terminal.current?.writeln('-------------------------------------------------------------------------')
+        terminal.current?.writeln('\x1b[32mweb_app_1\x1b[0m      \x1b[33m"nginx -g \'daemon of ..."\x1b[0m   \x1b[32mUp\x1b[0m   \x1b[35m0.0.0.0:8080->80/tcp\x1b[0m')
+        terminal.current?.writeln('\x1b[32mweb_redis_1\x1b[0m    \x1b[33m"docker-entrypoint.s ..."\x1b[0m   \x1b[32mUp\x1b[0m   \x1b[35m6379/tcp\x1b[0m')
+      } else if (cmd === 'docker-compose up' || cmd === 'docker compose up') {
+        terminal.current?.writeln('\x1b[37mCreating network "web_default" with the default driver\x1b[0m')
+        terminal.current?.writeln('\x1b[37mCreating web_redis_1 ... done\x1b[0m')
+        terminal.current?.writeln('\x1b[37mCreating web_app_1   ... done\x1b[0m')
+        terminal.current?.writeln('\x1b[32mAttaching to web_redis_1, web_app_1\x1b[0m')
+      } else if (cmd === 'docker-compose up -d' || cmd === 'docker compose up -d') {
+        terminal.current?.writeln('\x1b[37mCreating network "web_default" with the default driver\x1b[0m')
+        terminal.current?.writeln('\x1b[37mCreating web_redis_1 ... \x1b[32mdone\x1b[0m')
+        terminal.current?.writeln('\x1b[37mCreating web_app_1   ... \x1b[32mdone\x1b[0m')
+      } else if (cmd === 'docker-compose down' || cmd === 'docker compose down') {
+        terminal.current?.writeln('\x1b[37mStopping web_app_1   ... \x1b[32mdone\x1b[0m')
+        terminal.current?.writeln('\x1b[37mStopping web_redis_1 ... \x1b[32mdone\x1b[0m')
+        terminal.current?.writeln('\x1b[37mRemoving web_app_1   ... \x1b[32mdone\x1b[0m')
+        terminal.current?.writeln('\x1b[37mRemoving web_redis_1 ... \x1b[32mdone\x1b[0m')
+        terminal.current?.writeln('\x1b[37mRemoving network web_default\x1b[0m')
+      } else if (cmd === 'docker-compose logs' || cmd === 'docker compose logs') {
+        terminal.current?.writeln('\x1b[36mweb_app_1    |\x1b[0m 2024/01/15 10:30:45 [notice] 1#1: using the "epoll" event method')
+        terminal.current?.writeln('\x1b[36mweb_app_1    |\x1b[0m 2024/01/15 10:30:45 [notice] 1#1: nginx/1.25.3')
+        terminal.current?.writeln('\x1b[35mweb_redis_1  |\x1b[0m 1:C 15 Jan 2024 10:30:45.123 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo')
+        terminal.current?.writeln('\x1b[35mweb_redis_1  |\x1b[0m 1:M 15 Jan 2024 10:30:45.124 * Ready to accept connections')
+      } else if (cmd === 'docker-compose --help' || cmd === 'docker compose --help') {
+        terminal.current?.writeln('\x1b[37mUsage: docker-compose [OPTIONS] COMMAND [ARGS...]\x1b[0m')
+        terminal.current?.writeln('')
+        terminal.current?.writeln('\x1b[37mCommands:\x1b[0m')
+        terminal.current?.writeln('  \x1b[36mup\x1b[0m          Create and start containers')
+        terminal.current?.writeln('  \x1b[36mdown\x1b[0m        Stop and remove containers, networks')
+        terminal.current?.writeln('  \x1b[36mps\x1b[0m          List containers')
+        terminal.current?.writeln('  \x1b[36mlogs\x1b[0m        View output from containers')
+        terminal.current?.writeln('  \x1b[36mbuild\x1b[0m       Build or rebuild services')
+      } else {
+        terminal.current?.writeln('\x1b[37mUsage: docker-compose [OPTIONS] COMMAND [ARGS...]\x1b[0m')
+        terminal.current?.writeln('')
+        terminal.current?.writeln('Try these common commands:')
+        terminal.current?.writeln('  \x1b[36mdocker-compose up -d\x1b[0m              - Start services in background')
+        terminal.current?.writeln('  \x1b[36mdocker-compose ps\x1b[0m                  - List running services')
+        terminal.current?.writeln('  \x1b[36mdocker-compose logs\x1b[0m                - View service logs')
+        terminal.current?.writeln('  \x1b[36mdocker-compose down\x1b[0m                - Stop and remove services')
+        terminal.current?.writeln('  \x1b[36mdocker-compose --help\x1b[0m              - Show help')
       }
     }
 

@@ -16,13 +16,31 @@ interface ScoreChartProps {
 }
 
 export function ScoreChart({ data, title = "점수 추이" }: ScoreChartProps) {
-  const maxScore = Math.max(...data.map(d => d.score))
-  const minScore = Math.min(...data.map(d => d.score))
-  const avgScore = data.reduce((sum, d) => sum + d.score, 0) / data.length
+  const safeData = data || [];
+  
+  // Handle empty data case
+  if (safeData.length === 0) {
+    return (
+      <Card className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 backdrop-blur-sm">
+        <CardHeader>
+          <CardTitle className="text-white">{title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8 text-slate-400">
+            평가 데이터가 없습니다.
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+  
+  const maxScore = Math.max(...safeData.map(d => d.score))
+  const minScore = Math.min(...safeData.map(d => d.score))
+  const avgScore = safeData.reduce((sum, d) => sum + d.score, 0) / safeData.length
   
   // 점수 변화 계산
-  const lastScore = data[0]?.score || 0
-  const previousScore = data[1]?.score || 0
+  const lastScore = safeData[0]?.score || 0
+  const previousScore = safeData[1]?.score || 0
   const scoreChange = lastScore - previousScore
   const isImproving = scoreChange > 0
 
@@ -72,8 +90,8 @@ export function ScoreChart({ data, title = "점수 추이" }: ScoreChartProps) {
             
             {/* 차트 영역 */}
             <path
-              d={`M ${data.map((point, index) => {
-                const x = (index / (data.length - 1)) * 400
+              d={`M ${safeData.map((point, index) => {
+                const x = (index / (safeData.length - 1)) * 400
                 const y = 100 - ((point.score - minScore) / (maxScore - minScore)) * 80
                 return index === 0 ? `M ${x},${y}` : `L ${x},${y}`
               }).join(' ')}`}
@@ -85,8 +103,8 @@ export function ScoreChart({ data, title = "점수 추이" }: ScoreChartProps) {
             
             {/* 채우기 영역 */}
             <path
-              d={`M ${data.map((point, index) => {
-                const x = (index / (data.length - 1)) * 400
+              d={`M ${safeData.map((point, index) => {
+                const x = (index / (safeData.length - 1)) * 400
                 const y = 100 - ((point.score - minScore) / (maxScore - minScore)) * 80
                 return index === 0 ? `M ${x},${y}` : `L ${x},${y}`
               }).join(' ')} L 400,100 L 0,100 Z`}
@@ -94,8 +112,8 @@ export function ScoreChart({ data, title = "점수 추이" }: ScoreChartProps) {
             />
             
             {/* 데이터 포인트 */}
-            {data.map((point, index) => {
-              const x = (index / (data.length - 1)) * 400
+            {safeData.map((point, index) => {
+              const x = (index / (safeData.length - 1)) * 400
               const y = 100 - ((point.score - minScore) / (maxScore - minScore)) * 80
               return (
                 <g key={index}>
@@ -125,7 +143,7 @@ export function ScoreChart({ data, title = "점수 추이" }: ScoreChartProps) {
           {/* 최근 점수 표시 */}
           <div className="absolute top-2 right-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-500/30">
             <span className="text-blue-400 text-sm font-medium">
-              최근: {data[0]?.score}점
+              최근: {safeData[0]?.score}점
             </span>
           </div>
         </div>
@@ -133,7 +151,7 @@ export function ScoreChart({ data, title = "점수 추이" }: ScoreChartProps) {
         {/* 최근 평가 목록 */}
         <div className="space-y-2">
           <h4 className="text-sm font-medium text-slate-400 mb-3">최근 평가</h4>
-          {data.slice(0, 3).map((evaluation, index) => (
+          {safeData.slice(0, 3).map((evaluation, index) => (
             <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-slate-700/30 border border-slate-600/50">
               <div>
                 <div className="text-sm font-medium text-white">{evaluation.mission}</div>

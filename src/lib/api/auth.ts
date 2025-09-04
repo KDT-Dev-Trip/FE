@@ -205,6 +205,17 @@ const apiClient = new ApiClient()
 export const authApi = {
   // 이메일/패스워드 로그인
   async login(credentials: LoginRequest): Promise<AuthResponse> {
+    // Mock mode for testing
+    if (process.env.NODE_ENV === 'development') {
+      const { mockApiResponses } = await import('@/lib/mock-data')
+      const mockResponse = mockApiResponses.login
+      
+      TokenManager.setTokens(mockResponse.accessToken, mockResponse.refreshToken)
+      TokenManager.setUser(mockResponse.user)
+      
+      return mockResponse
+    }
+    
     const url = getApiUrl('AUTH_SERVICE', API_ENDPOINTS.AUTH.LOGIN)
     const response = await apiClient.post<AuthResponse>(url, credentials, false)
     
@@ -216,6 +227,17 @@ export const authApi = {
 
   // 회원가입
   async register(data: RegisterRequest): Promise<AuthResponse> {
+    // Mock mode for testing
+    if (process.env.NODE_ENV === 'development') {
+      const { mockApiResponses } = await import('@/lib/mock-data')
+      const mockResponse = mockApiResponses.register
+      
+      TokenManager.setTokens(mockResponse.accessToken, mockResponse.refreshToken)
+      TokenManager.setUser(mockResponse.user)
+      
+      return mockResponse
+    }
+    
     const url = getApiUrl('AUTH_SERVICE', API_ENDPOINTS.AUTH.REGISTER)
     const response = await apiClient.post<AuthResponse>(url, data, false)
     

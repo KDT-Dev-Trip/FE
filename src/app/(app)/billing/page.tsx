@@ -161,7 +161,7 @@ export default function BillingPage() {
           <p className="text-muted-foreground">구독 상태와 결제 내역을 확인하세요</p>
         </div>
         {subscription && subscription.status === 'ACTIVE' && (
-          <Button variant="outline" onClick={handleCancelSubscription}>
+          <Button variant="outline" onClick={handleCancelSubscription} className="text-black hover:text-black">
             구독 취소
           </Button>
         )}

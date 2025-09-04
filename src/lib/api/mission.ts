@@ -143,12 +143,36 @@ export const missionApi = {
 
   // Start a mission
   async startMission(missionId: number): Promise<MissionAttempt> {
+    // Mock mode for testing
+    if (process.env.NODE_ENV === 'development') {
+      return {
+        id: Date.now(),
+        missionId,
+        userId: 1,
+        status: 'IN_PROGRESS',
+        startedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        score: null,
+        feedback: null,
+        workspaceData: null,
+        terminalSessionId: null
+      }
+    }
+    
     const url = buildUrl(getApiUrl('MISSION_SERVICE', API_ENDPOINTS.MISSION.START), { id: missionId })
     return apiClient.post<MissionAttempt>(url, {})
   },
 
   // Submit mission
   async submitMission(missionId: number, submission: MissionSubmission): Promise<{ message: string; evaluationId?: number }> {
+    // Mock mode for testing
+    if (process.env.NODE_ENV === 'development') {
+      return {
+        message: '미션이 성공적으로 제출되었습니다!',
+        evaluationId: Date.now()
+      }
+    }
+    
     const url = buildUrl(getApiUrl('MISSION_SERVICE', API_ENDPOINTS.MISSION.SUBMIT), { id: missionId })
     return apiClient.post(url, submission)
   },
@@ -166,11 +190,28 @@ export const missionApi = {
 
   // Terminal management
   async connectTerminal(missionId: number, attemptId: string): Promise<TerminalSession> {
+    // Mock mode for testing
+    if (process.env.NODE_ENV === 'development') {
+      return {
+        sessionId: `session-${Date.now()}`,
+        websocketUrl: `ws://localhost:9002/terminal/${attemptId}`,
+        status: 'CONNECTED',
+        createdAt: new Date().toISOString()
+      }
+    }
+    
     const url = buildUrl(getApiUrl('MISSION_SERVICE', API_ENDPOINTS.MISSION.TERMINAL_CONNECT), { id: missionId })
     return apiClient.post<TerminalSession>(url, { attemptId })
   },
 
   async disconnectTerminal(missionId: number, sessionId: string): Promise<{ message: string }> {
+    // Mock mode for testing
+    if (process.env.NODE_ENV === 'development') {
+      return {
+        message: '터미널 연결이 해제되었습니다.'
+      }
+    }
+    
     const url = buildUrl(getApiUrl('MISSION_SERVICE', API_ENDPOINTS.MISSION.TERMINAL_DISCONNECT), { id: missionId })
     return apiClient.post(url, { sessionId })
   },
