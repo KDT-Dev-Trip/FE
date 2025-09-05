@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
-import { LayoutDashboard, Map, UserCircle, LogOut, Settings, Plane, ChevronDown, Book, PanelLeft } from "lucide-react"
+import { LayoutDashboard, Map, UserCircle, LogOut, Settings, Plane, ChevronDown, Book, PanelLeft, Gamepad2 } from "lucide-react"
 import { useSidebar } from "@/contexts/sidebar-context"
 
 import { Button } from "@/components/ui/button"
@@ -21,6 +21,7 @@ const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "대시보드" },
   { href: "/guides", icon: Book, label: "기술 가이드" },
   { href: "/missions", icon: Map, label: "미션" },
+  { href: "/games", icon: Gamepad2, label: "게임" },
   { href: "/profile", icon: UserCircle, label: "프로필" },
   { href: "/settings", icon: Settings, label: "설정" },
 ]

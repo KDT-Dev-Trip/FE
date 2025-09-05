@@ -429,6 +429,72 @@ body {
   animation: gradientShift 4s ease-in-out infinite;
 }
 
+/* 히어로 타이틀 애니메이션 */
+.hero-title {
+  animation: heroGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes heroGlow {
+  0% {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+  }
+  100% {
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+  }
+}
+
+/* 빛나는 버튼 효과 */
+.glowing-button {
+  position: relative;
+  overflow: hidden;
+  animation: buttonPulse 2s ease-in-out infinite;
+}
+
+.glowing-button::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, #3b82f6, #60a5fa, #3b82f6, #1d4ed8);
+  background-size: 400% 400%;
+  border-radius: inherit;
+  z-index: -1;
+  animation: gradientShift 3s ease infinite, buttonGlow 2s ease-in-out infinite;
+}
+
+.glowing-button::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: inherit;
+  border-radius: inherit;
+  z-index: -1;
+}
+
+@keyframes buttonPulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(59, 130, 246, 0.4),
+      0 0 40px rgba(59, 130, 246, 0.2),
+      0 0 60px rgba(59, 130, 246, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(59, 130, 246, 0.6),
+      0 0 60px rgba(59, 130, 246, 0.3),
+      0 0 90px rgba(59, 130, 246, 0.2);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes buttonGlow {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 @keyframes gradientShift {
   0%, 100% {
     background-position: 0% 50%;
@@ -455,6 +521,28 @@ body {
 
 .will-change-opacity {
   will-change: opacity;
+}
+
+/* GPU 가속 최적화 */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* 모바일 성능 최적화 */
+@media (max-width: 768px) {
+  .animate-infinite-scroll {
+    animation-duration: 60s; /* 모바일에서 더 느리게 */
+  }
+  
+  .backdrop-blur-xl {
+    backdrop-filter: blur(8px); /* 모바일에서 블러 강도 줄임 */
+  }
+  
+  .shadow-2xl {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
 }
 
 /* 향상된 focus 상태 */
