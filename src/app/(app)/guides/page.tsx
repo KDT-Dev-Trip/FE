@@ -25,7 +25,8 @@ import {
   BarChart3,
   Activity,
   GitBranch,
-  Settings
+  Settings,
+  CornerDownLeft
 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
@@ -52,7 +53,6 @@ const ChatBot = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
   const [chatSize, setChatSize] = useState({ width: 320, height: 384 })
   const [isResizing, setIsResizing] = useState(false)
   const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0 })
-
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return
 
@@ -166,11 +166,11 @@ const ChatBot = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
 
   return (
     <div 
-      className="fixed bg-slate-900/95 backdrop-blur-sm border border-slate-700 rounded-xl shadow-2xl z-50 flex flex-col relative animate-[slideInUp_0.3s_ease-out]"
+      className="fixed bg-slate-900/95 backdrop-blur-sm border border-slate-700 rounded-xl shadow-2xl z-50 flex flex-col animate-[slideInUp_0.3s_ease-out]"
       style={{ 
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
+        position: 'fixed',
+        bottom: '80px',
+        right: '20px',
         width: `${chatSize.width}px`, 
         height: `${chatSize.height}px`,
         minWidth: '280px',
@@ -270,7 +270,7 @@ const ChatBot = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
             onClick={handleSendMessage}
             className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 h-10 aspect-square p-0 flex items-center justify-center"
           >
-            <Send className="w-4 h-4" />
+            <CornerDownLeft className="w-4 h-4" />
           </Button>
         </div>
       </div>
@@ -395,7 +395,7 @@ export default function TechGuidesPage() {
   const [isChatOpen, setIsChatOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-6 relative">
       <div className="max-w-6xl mx-auto space-y-12">
         {/* 헤더 */}
         <div className="text-center space-y-6">
@@ -624,7 +624,7 @@ export default function TechGuidesPage() {
       {/* 챗봇 */}
       <ChatBot 
         isOpen={isChatOpen} 
-        onClose={() => setIsChatOpen(false)} 
+        onClose={() => setIsChatOpen(false)}
       />
     </div>
   )

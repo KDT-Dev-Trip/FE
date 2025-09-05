@@ -184,7 +184,27 @@ export default function EvaluationPage() {
       const data = await aiEvaluationApi.getComprehensiveEvaluationData(
         evaluationId ? parseInt(evaluationId) : undefined
       )
-      setEvaluationData(data)
+      
+      // Check if data is valid and has evaluations
+      if (data && data.evaluations && data.evaluations.length > 0) {
+        setEvaluationData(data)
+      } else {
+        // Use mock data if API returns empty or invalid data
+        console.log('API returned empty data, using mock data')
+        setEvaluationData({
+          user: mockEvaluationData.user,
+          evaluations: [mockEvaluationData.recentEvaluation],
+          commandAnalysis: mockEvaluationData.commandAnalysis,
+          evaluationHistory: mockEvaluationData.evaluationHistory,
+          summary: {
+            averageScore: mockEvaluationData.recentEvaluation.overall_score,
+            totalEvaluations: 1,
+            completionRate: 1.0,
+            strongAreas: mockEvaluationData.recentEvaluation.feedback_details.strengths.slice(0, 3),
+            improvementAreas: mockEvaluationData.recentEvaluation.feedback_details.improvements.slice(0, 3)
+          }
+        })
+      }
     } catch (error) {
       console.error('Failed to load evaluation data:', error)
       setError('평가 데이터를 불러올 수 없습니다.')
@@ -193,8 +213,20 @@ export default function EvaluationPage() {
         description: "평가 데이터를 불러오는데 실패했습니다.",
         variant: "destructive",
       })
-      // Fallback to mock data
-      setEvaluationData(mockEvaluationData)
+      // Fallback to mock data structure
+      setEvaluationData({
+        user: mockEvaluationData.user,
+        evaluations: [mockEvaluationData.recentEvaluation],
+        commandAnalysis: mockEvaluationData.commandAnalysis,
+        evaluationHistory: mockEvaluationData.evaluationHistory,
+        summary: {
+          averageScore: mockEvaluationData.recentEvaluation.overall_score,
+          totalEvaluations: 1,
+          completionRate: 1.0,
+          strongAreas: mockEvaluationData.recentEvaluation.feedback_details.strengths.slice(0, 3),
+          improvementAreas: mockEvaluationData.recentEvaluation.feedback_details.improvements.slice(0, 3)
+        }
+      })
     } finally {
       setIsLoading(false)
     }
@@ -232,7 +264,11 @@ export default function EvaluationPage() {
     )
   }
 
-  const { user, recentEvaluation, commandAnalysis, evaluationHistory } = evaluationData || mockEvaluationData
+  // Handle both API and mock data structure
+  const user = evaluationData?.user || mockEvaluationData.user
+  const recentEvaluation = (evaluationData?.evaluations && evaluationData.evaluations[0]) || mockEvaluationData.recentEvaluation
+  const commandAnalysis = evaluationData?.commandAnalysis || mockEvaluationData.commandAnalysis
+  const evaluationHistory = evaluationData?.evaluationHistory || mockEvaluationData.evaluationHistory
   
   // Handle both new API and mock data structure
   const missionTypeStats = (evaluationData && 'missionStats' in evaluationData) 
