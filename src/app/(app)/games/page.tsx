@@ -33,8 +33,22 @@ const games: GameInfo[] = [
     estimatedTime: '10-30분',
     features: ['실시간 WPM 측정', '정확도 분석', '부정행위 방지', '다양한 기술 스택'],
     link: '/games/typing',
-    isNew: true,
+    isNew: false,
     isPopular: true
+  },
+  {
+    id: 'fishing-game',
+    title: 'Jenkins 아저씨의 DevOps 낚시',
+    description: 'Jenkins 아저씨가 DevOps 바다에서 Docker 고래와 ArgoCD 문어를 낚는 재미있는 아케이드 게임입니다.',
+    icon: '🎣',
+    category: 'arcade',
+    difficulty: 'beginner',
+    playerCount: '1명',
+    estimatedTime: '5-15분',
+    features: ['실시간 액션', '다양한 DevOps 생물', '점수 시스템', '키보드 조작'],
+    link: '/games/fishing',
+    isNew: true,
+    isPopular: false
   },
   // 미래에 추가될 게임들
   {
@@ -95,8 +109,8 @@ const difficultyColors = {
 }
 
 export default function GamesPage() {
-  const availableGames = games.filter(game => game.id === 'typing-game')
-  const comingSoonGames = games.filter(game => game.id !== 'typing-game')
+  const availableGames = games.filter(game => ['typing-game', 'fishing-game'].includes(game.id))
+  const comingSoonGames = games.filter(game => !['typing-game', 'fishing-game'].includes(game.id))
 
   return (
     <div className="min-h-screen bg-black p-6">
@@ -116,7 +130,7 @@ export default function GamesPage() {
           <Card className="bg-gray-900/50 border-gray-700/50 text-center">
             <CardContent className="p-6">
               <Trophy className="h-8 w-8 text-yellow-400 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-white">1</div>
+              <div className="text-2xl font-bold text-white">2</div>
               <div className="text-sm text-gray-400">이용 가능한 게임</div>
             </CardContent>
           </Card>
@@ -130,7 +144,7 @@ export default function GamesPage() {
           <Card className="bg-gray-900/50 border-gray-700/50 text-center">
             <CardContent className="p-6">
               <Zap className="h-8 w-8 text-green-400 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-white">3</div>
+              <div className="text-2xl font-bold text-white">2</div>
               <div className="text-sm text-gray-400">출시 예정</div>
             </CardContent>
           </Card>
